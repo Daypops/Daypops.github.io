@@ -1,54 +1,98 @@
+/* Corps de la page */
 body {
-    font-family: sans-serif;
-    padding: 10px;
-  }
-  
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-  }
-  
-  .product {
-    border: 1px solid #ccc;
-    padding: 5px;
-    cursor: pointer;
-  }
-  
-  video {
-    width: 100%;
-    border-radius: 8px;
-  }
-  
-  #cart {
-    margin-top: 20px;
-  }
-  
-  .modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .modal-content {
-    background: white;
-    padding: 15px;
-    width: 90%;
-    max-width: 400px;
-    border-radius: 10px;
-  }
-  
-  .hidden {
-    display: none;
-  }
-  
-  .qty {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    justify-content: center;
-  }
-  
+  font-family: sans-serif;
+  padding: 10px;
+  background: #f9f9f9;
+}
+
+/* Grille de produits */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+/* Carte produit */
+.product {
+  border: 1px solid #ccc;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+
+/* Vidéos dans les cartes */
+.product video {
+  width: 100%;        /* Remplit la carte */
+  max-height: 120px;  /* Limite la hauteur */
+  object-fit: cover;  /* Remplit la zone, léger crop si nécessaire */
+  border-radius: 5px;
+  display: block;
+  background: black;
+}
+
+/* Panier */
+#cart {
+  margin-top: 20px;
+  background: #fff;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+/* Modale produit */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 15px;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+/* Vidéo dans la modale */
+.modal-content video {
+  width: 100%;
+  max-height: 300px;  /* Plus grande pour la modale */
+  object-fit: contain; /* Ratio conservé, pas de crop */
+  border-radius: 8px;
+  background: black;
+}
+
+/* Cacher éléments */
+.hidden {
+  display: none;
+}
+
+/* Sélecteur de quantité */
+.qty {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Boutons panier / quantité */
+button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #0078ff;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button:hover {
+  background-color: #005bb5;
+}
