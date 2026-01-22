@@ -16,7 +16,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const div = document.createElement("div");
     div.className = "product";
     div.innerHTML = `
-      <video src="${p.video}" muted autoplay loop playsinline></video>
+      <video 
+        src="${p.video}" 
+        muted autoplay loop playsinline
+        style="width:100%; max-height:120px; object-fit:cover; border-radius:5px; display:block; background:black;">
+      </video>
       <p>${p.name}</p>
     `;
     div.onclick = () => openModal(p);
