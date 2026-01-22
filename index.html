@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Boutique</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+
+<h2>🛍️ Nos produits</h2>
+
+<div id="products" class="grid"></div>
+
+<div id="cart">
+  <h3>🛒 Panier</h3>
+  <ul id="cart-list"></ul>
+  <button onclick="sendOrder()">Valider la commande</button>
+</div>
+
+<!-- Modale produit -->
+<div id="modal" class="modal hidden">
+  <div class="modal-content">
+    <video id="modal-video" controls></video>
+    <h3 id="modal-name"></h3>
+
+    <div class="qty">
+      <button onclick="changeQty(-1)">−</button>
+      <span id="qty">1</span>
+      <button onclick="changeQty(1)">+</button>
+    </div>
+
+    <button onclick="addToCart()">Ajouter au panier</button>
+    <button onclick="closeModal()">Fermer</button>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
