@@ -2,8 +2,8 @@ const tg = Telegram.WebApp;
 tg.ready();
 
 const products = [
-  { id: 1, name: "Produit A", video: "video1.MP4" },
-  { id: 2, name: "Produit B", video: "video2.MP4" },
+  { id: 1, name: "Produit A", video: "videos/video1.MP4" },
+  { id: 2, name: "Produit B", video: "videos/video2.MP4" },
   { id: 3, name: "Produit C", video: "video3.MP4" },
   { id: 4, name: "Produit D", video: "video4.MP4" },
   { id: 5, name: "Produit E", video: "video5.MP4" }
