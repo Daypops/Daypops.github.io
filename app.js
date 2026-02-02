@@ -8,13 +8,77 @@ document.addEventListener("DOMContentLoaded", () => {
     tg.ready();
   }
 
-  const products = [
-    { id: 1, name: "Produit A", video: "videos/video1.MP4" },
-    { id: 2, name: "Produit B", video: "videos/video2.MP4" }
-  ];
+  // ====== PARTIE ADMIN ======
+  const ADMIN_ID = 123456789; // Remplace par ton ID Telegram
+  let userId = tg?.initDataUnsafe?.user?.id;
+
+  if (userId === ADMIN_ID) {
+    // Rediriger vers la page admin ou afficher l'interface admin directement
+    console.log("Admin connecté !");
+    document.body.innerHTML = `
+      <h1>Admin : Ajouter un produit</h1>
+      <form id="product-form">
+        <label>Nom du produit :</label>
+        <input type="text" id="product-name" required>
+        <label>Vidéo :</label>
+        <input type="file" id="product-video" accept="video/*" required>
+        <label>Prix et quantités :</label>
+        <div>
+          x1: <input type="number" id="price-x1" required> €
+          x5: <input type="number" id="price-x5" required> €
+          x10: <input type="number" id="price-x10" required> €
+        </div>
+        <button type="submit">Ajouter le produit</button>
+      </form>
+      <h2>Produits existants</h2>
+      <ul id="product-list"></ul>
+    `;
+
+    let products = JSON.parse(localStorage.getItem("products") || "[]");
+
+    function renderProducts() {
+      const list = document.getElementById("product-list");
+      list.innerHTML = "";
+      products.forEach(p => {
+        const li = document.createElement("li");
+        li.textContent = `${p.name} - x1:${p.prices[1]}€, x5:${p.prices[5]}€, x10:${p.prices[10]}€`;
+        list.appendChild(li);
+      });
+    }
+
+    document.getElementById("product-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("product-name").value;
+      const videoFile = document.getElementById("product-video").files[0];
+
+      // Upload vidéo côté serveur
+      const formData = new FormData();
+      formData.append("video", videoFile);
+
+      const res = await fetch("/upload", { method: "POST", body: formData });
+      const data = await res.json();
+      const videoUrl = data.videoUrl;
+
+      const prices = {
+        1: parseFloat(document.getElementById("price-x1").value),
+        5: parseFloat(document.getElementById("price-x5").value),
+        10: parseFloat(document.getElementById("price-x10").value)
+      };
+
+      products.push({ name, video: videoUrl, prices });
+      localStorage.setItem("products", JSON.stringify(products));
+      renderProducts();
+      e.target.reset();
+    });
+
+    renderProducts();
+    return; // On ne charge pas la partie "client normal" pour l'admin
+  }
+
+  // ====== PARTIE CLIENT NORMAL ======
+  let products = JSON.parse(localStorage.getItem("products") || "[]");
 
   const container = document.getElementById("products");
-
   let cart = [];
   let currentProduct = null;
   let quantity = 1;
@@ -32,7 +96,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ====== FONCTIONS GLOBALES ======
-
   window.openModal = function(product) {
     currentProduct = product;
     quantity = 1;
