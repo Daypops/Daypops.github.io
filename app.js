@@ -1,13 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const tg = Telegram.WebApp;
-  tg.ready();
+  console.log("app.js chargé ✅");
+
+  // Sécurité : Telegram seulement si dispo
+  let tg = null;
+  if (window.Telegram && window.Telegram.WebApp) {
+    tg = Telegram.WebApp;
+    tg.ready();
+  }
 
   const products = [
     { id: 1, name: "Produit A", video: "videos/video1.MP4" },
-    { id: 2, name: "Produit B", video: "videos/video2.MP4" },
-    { id: 3, name: "Produit C", video: "videos/video3.mp4" },
-    { id: 4, name: "Produit D", video: "videos/video4.mp4" },
-    { id: 5, name: "Produit E", video: "videos/video5.mp4" }
+    { id: 2, name: "Produit B", video: "videos/video2.MP4" }
   ];
 
   const container = document.getElementById("products");
@@ -16,6 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentProduct = null;
   let quantity = 1;
 
+  // Affichage produits
   products.forEach(p => {
     const div = document.createElement("div");
     div.className = "product";
@@ -23,9 +27,11 @@ document.addEventListener("DOMContentLoaded", () => {
       <video src="${p.video}" muted autoplay loop playsinline></video>
       <p>${p.name}</p>
     `;
-    div.onclick = () => openModal(p);
+    div.addEventListener("click", () => openModal(p));
     container.appendChild(div);
   });
+
+  // ====== FONCTIONS GLOBALES ======
 
   window.openModal = function(product) {
     currentProduct = product;
@@ -56,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
     list.innerHTML = "";
     cart.forEach(i => {
       const li = document.createElement("li");
-      li.innerText = `${i.qty} x ${i.name}`;
+      li.textContent = `${i.qty} x ${i.name}`;
       list.appendChild(li);
     });
   }
@@ -67,7 +73,12 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    tg.sendData(JSON.stringify({ cart }));
-    tg.close();
+    if (tg) {
+      tg.sendData(JSON.stringify({ cart }));
+      tg.close();
+    } else {
+      console.log("Commande (hors Telegram) :", cart);
+      alert("Commande envoyée (mode test)");
+    }
   };
 });
