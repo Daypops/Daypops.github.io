@@ -1,6 +1,24 @@
 document.addEventListener("DOMContentLoaded", () => {
   console.log("app.js chargé ✅");
 
+  function applyTheme(config) {
+    console.log("🎨 Application du thème", config);
+  
+    // Fond
+    if (config.bgColor) {
+      document.body.style.backgroundColor = config.bgColor;
+    }
+  
+    // Boutons (y compris ceux ajoutés plus tard)
+    if (config.buttonColor) {
+      document.querySelectorAll("button").forEach(btn => {
+        btn.style.backgroundColor = config.buttonColor;
+        btn.style.color = "#fff";
+      });
+    }
+  }
+
+
   // ====== CHARGEMENT CONFIG BOUTIQUE ======
   const config = JSON.parse(localStorage.getItem("shopConfig")) || {
     title: "Ma boutique",
@@ -117,4 +135,5 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Commande envoyée (mode test)");
     }
   };
+  setTimeout(() => applyTheme(config), 0);
 });
