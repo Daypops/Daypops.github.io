@@ -1,47 +1,72 @@
-/* Corps de la page */
-body {
-  font-family: sans-serif;
-  padding: 10px;
-  background: #f9f9f9;
+/* Reset léger */
+* {
+  box-sizing: border-box;
 }
 
-/* Grille de produits */
+/* Corps */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  margin: 0;
+  padding: 12px;
+  background: #f5f5f5;
+}
+
+/* Titre */
+h2 {
+  margin: 10px 0 15px;
+}
+
+/* ====== GRILLE PRODUITS ====== */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(2, 1fr); /* 2 par ligne sur mobile */
+  gap: 12px;
 }
 
-/* Carte produit */
+/* Desktop / tablette */
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
+/* ====== CARTE PRODUIT ====== */
 .product {
-  border: 1px solid #ccc;
-  padding: 5px;
-  cursor: pointer;
-  border-radius: 8px;
+  background: white;
+  border-radius: 12px;
   overflow: hidden;
-  background: #fff;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
 }
 
-/* Vidéos dans les cartes */
+/* Conteneur vidéo carré */
 .product video {
-  width: 100%;        /* Remplit la carte */
-  max-height: 120px;  /* Limite la hauteur */
-  object-fit: cover;  /* Remplit la zone, léger crop si nécessaire */
-  border-radius: 5px;
-  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;   /* 🔥 carré parfait */
+  object-fit: cover;
   background: black;
 }
 
-/* Panier */
+/* Nom produit */
+.product p {
+  margin: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* ====== PANIER ====== */
 #cart {
   margin-top: 20px;
   background: #fff;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
-/* Modale produit */
+/* ====== MODALE ====== */
 .modal {
   position: fixed;
   inset: 0;
@@ -49,44 +74,41 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 10;
 }
 
 .modal-content {
   background: white;
   padding: 15px;
   width: 90%;
-  max-width: 400px;
-  border-radius: 10px;
+  max-width: 420px;
+  border-radius: 14px;
   text-align: center;
 }
 
-/* Vidéo dans la modale */
+/* Vidéo modale */
 .modal-content video {
   width: 100%;
-  max-height: 300px;  /* Plus grande pour la modale */
-  object-fit: contain; /* Ratio conservé, pas de crop */
-  border-radius: 8px;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  border-radius: 10px;
   background: black;
 }
 
-/* Cacher éléments */
-.hidden {
-  display: none;
-}
-
-/* Sélecteur de quantité */
+/* Quantité */
 .qty {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   align-items: center;
   justify-content: center;
+  margin: 10px 0;
 }
 
-/* Boutons panier / quantité */
+/* Boutons */
 button {
-  padding: 5px 10px;
+  padding: 8px 14px;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   background-color: #0078ff;
   color: white;
   cursor: pointer;
@@ -95,4 +117,9 @@ button {
 
 button:hover {
   background-color: #005bb5;
+}
+
+/* Cacher */
+.hidden {
+  display: none;
 }
