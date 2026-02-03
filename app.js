@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ====== PARTIE ADMIN ======
-  const ADMIN_ID = 123456789; // Remplace par ton ID Telegram
+  const ADMIN_ID = 5532697747; // Remplace par ton ID Telegram
   let userId = tg?.initDataUnsafe?.user?.id;
 
   if (userId === ADMIN_ID) {
