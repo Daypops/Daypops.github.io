@@ -1,3 +1,19 @@
+const config = JSON.parse(localStorage.getItem("shopConfig")) || {
+  title: "Ma boutique",
+  bgColor: "#f5f5f5",
+  buttonColor: "#0078ff"
+};
+
+document.getElementById("shop-title").innerText = config.title;
+document.documentElement.style.setProperty("--bg-color", config.bgColor);
+document.documentElement.style.setProperty("--button-color", config.buttonColor);
+
+if (config.logo) {
+  const logo = document.getElementById("shop-logo");
+  logo.src = config.logo;
+  logo.classList.remove("hidden");
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   console.log("app.js chargé ✅");
 
