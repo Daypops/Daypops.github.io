@@ -1,16 +1,19 @@
 document.addEventListener("DOMContentLoaded", () => {
   console.log("app.js chargé ✅");
 
+  // ====== FONCTION THÈME ======
   function applyTheme(config) {
     console.log("🎨 Application du thème", config);
-  
+
     // Fond
     if (config.bgColor) {
-      document.body.style.backgroundColor = config.bgColor;
+      document.documentElement.style.setProperty("--bg-color", config.bgColor);
+      document.body.style.backgroundColor = config.bgColor; // fallback
     }
-  
-    // Boutons (y compris ceux ajoutés plus tard)
+
+    // Boutons
     if (config.buttonColor) {
+      document.documentElement.style.setProperty("--button-color", config.buttonColor);
       document.querySelectorAll("button").forEach(btn => {
         btn.style.backgroundColor = config.buttonColor;
         btn.style.color = "#fff";
@@ -18,34 +21,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-
   // ====== CHARGEMENT CONFIG BOUTIQUE ======
   const config = JSON.parse(localStorage.getItem("shopConfig")) || {
     title: "Ma boutique",
     bgColor: "#f5f5f5",
     buttonColor: "#0078ff"
   };
-  
   console.log("Config chargée :", config);
-  
+
   // Titre
   const titleEl = document.getElementById("shop-title");
   if (titleEl && config.title) {
     titleEl.innerText = config.title;
   }
-  
-  // Couleurs
-  // ====== APPLICATION DU THÈME (FORCE TELEGRAM) ======
-  if (config.bgColor) {
-    document.body.style.backgroundColor = config.bgColor;
-  }
-  
-  if (config.buttonColor) {
-    document.querySelectorAll("button").forEach(btn => {
-      btn.style.backgroundColor = config.buttonColor;
-    });
-  }
-  
+
   // Logo
   if (config.logo) {
     const logo = document.getElementById("shop-logo");
@@ -60,20 +49,23 @@ document.addEventListener("DOMContentLoaded", () => {
   if (window.Telegram && window.Telegram.WebApp) {
     tg = Telegram.WebApp;
     tg.ready();
+    // Appliquer le thème après que Telegram a forcé son style
+    setTimeout(() => applyTheme(config), 50);
+  } else {
+    applyTheme(config);
   }
 
+  // ====== PRODUITS ======
   const products = [
     { id: 1, name: "Produit A", video: "videos/video1.MP4" },
     { id: 2, name: "Produit B", video: "videos/video2.MP4" }
   ];
 
   const container = document.getElementById("products");
-
   let cart = [];
   let currentProduct = null;
   let quantity = 1;
 
-  // Affichage produits
   products.forEach(p => {
     const div = document.createElement("div");
     div.className = "product";
@@ -86,7 +78,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ====== FONCTIONS GLOBALES ======
-
   window.openModal = function(product) {
     currentProduct = product;
     quantity = 1;
@@ -135,5 +126,4 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Commande envoyée (mode test)");
     }
   };
-  setTimeout(() => applyTheme(config), 0);
 });
