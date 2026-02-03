@@ -17,8 +17,16 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   
   // Couleurs
-  document.documentElement.style.setProperty("--bg-color", config.bgColor);
-  document.documentElement.style.setProperty("--button-color", config.buttonColor);
+  // ====== APPLICATION DU THÈME (FORCE TELEGRAM) ======
+  if (config.bgColor) {
+    document.body.style.backgroundColor = config.bgColor;
+  }
+  
+  if (config.buttonColor) {
+    document.querySelectorAll("button").forEach(btn => {
+      btn.style.backgroundColor = config.buttonColor;
+    });
+  }
   
   // Logo
   if (config.logo) {
