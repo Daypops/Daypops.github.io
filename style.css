@@ -145,3 +145,33 @@ button:hover {
 .hidden {
   display: none;
 }
+
+/* ===== MENU BAS ===== */
+.bottom-menu {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  background: #fff;
+  border-top: 1px solid #ccc;
+  box-shadow: 0 -2px 6px rgba(0,0,0,0.08);
+  justify-content: space-around;
+  padding: 8px 0;
+  z-index: 20;
+}
+
+.bottom-menu button {
+  flex: 1;
+  margin: 0 5px;
+  padding: 10px 0;
+  font-size: 14px;
+  border-radius: 8px;
+}
+
+.bottom-menu button.active {
+  background-color: var(--button-color);
+  color: #fff;
+  font-weight: bold;
+}
+
