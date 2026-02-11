@@ -2,42 +2,49 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Paramètres boutique</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <title>Paramètres</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f5f5f5;
+    }
+
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #0078ff;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+  </style>
 </head>
 <body>
 
-<h2>⚙️ Paramètres boutique</h2>
+  <div class="card">
+    <h2>Modifier la configuration</h2>
+    <p>Les paramètres sont gérés via Google Form.</p>
+    <button onclick="openForm()">Ouvrir le formulaire</button>
+  </div>
 
-<label>
-  Nom de la boutique
-  <input type="text" id="title">
-</label>
-
-<label>
-  Logo / Bannière
-  <input type="file" id="logo">
-</label>
-
-<label>
-  Couleur de fond
-  <input type="color" id="bgColor">
-</label>
-
-<label>
-  Couleur des boutons
-  <input type="color" id="buttonColor">
-</label>
-
-<button onclick="save()">💾 Enregistrer</button>
-
-<!-- Menu bas -->
-<div class="bottom-menu">
-  <button onclick="window.location.href='index.html'">Menu</button>
-  <button class="active" onclick="window.location.href='settings.html'">Paramètres</button>
-</div>
-
-<script src="settings.js"></script>
+  <script src="settings.js"></script>
 </body>
 </html>
