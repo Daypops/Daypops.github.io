@@ -27,16 +27,23 @@ document.addEventListener("DOMContentLoaded", () => {
   // 🔥 CHARGEMENT CONFIG SERVEUR
   console.log("Avant fetch");
 
-  fetch("https://cad1-2a01-cb0d-294-e200-9eb-d022-9b6d-e6aa.ngrok-free.app/get-config", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({}) // corps vide
-  })
-  .then(res => res.json())
-  .then(config => {
-    console.log("Config serveur via POST :", config);
-  })
-  .catch(err => console.error(err));
+  fetch("https://cad1-2a01-cb0d-294-e200-9eb-d022-9b6d-e6aa.ngrok-free.app/get-config")
+    .then(res => {
+      console.log("STATUS:", res.status);
+      return res.json();
+    })
+    .then(config => {
+      console.log("Config serveur :", config);
+
+      // Titre
+      const titleEl = document.getElementById("shop-title");
+      if (titleEl && config.title) {
+        titleEl.innerText = config.title;
+      }
+
+      applyTheme(config);
+    })
+    .catch(err => console.error("Erreur config :", err));
 
 
   
