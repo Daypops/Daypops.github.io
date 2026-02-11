@@ -1,39 +1,34 @@
 let config = {};
 
-// Charger config existante
-fetch("https://cad1-2a01-cb0d-294-e200-9eb-d022-9b6d-e6aa.ngrok-free.app/get-config")
-  .then(res => res.json())
-  .then(data => {
-    config = data;
+// URL de ta feuille Google Sheets publiée en CSV
+const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRVsxi4Wz_wnVaqEeliFCdkVwARAp2EwYHht9-VUmf7mcx_Eo3EqaUAgS2kBkXhOmJ0zSp9wZWEZkWx/pub?output=csv";
 
+// Charger la config depuis Google Sheets
+fetch(csvUrl)
+  .then(res => res.text())
+  .then(text => {
+    // Transformer le CSV en JSON simple
+    const lines = text.trim().split("\n");
+    lines.forEach(line => {
+      const [key, value] = line.split(",");
+      config[key.trim()] = value.trim();
+    });
+
+    // Initialiser les champs du formulaire
     document.getElementById("title").value = config.title || "";
     document.getElementById("bgColor").value = config.bgColor || "#f5f5f5";
     document.getElementById("buttonColor").value = config.buttonColor || "#0078ff";
-  });
+  })
+  .catch(err => console.error("Erreur chargement config :", err));
 
-document.getElementById("logo").addEventListener("change", e => {
-  const reader = new FileReader();
-  reader.onload = () => {
-    config.logo = reader.result;
-  };
-  reader.readAsDataURL(e.target.files[0]);
-});
-
+// Fonction pour "sauvegarder"
+// ⚠️ Google Sheets publié en lecture seule, donc on ne peut pas l’écrire directement
+// Ici, on sauvegarde uniquement dans localStorage pour l’instant
 function save() {
   config.title = document.getElementById("title").value;
   config.bgColor = document.getElementById("bgColor").value;
   config.buttonColor = document.getElementById("buttonColor").value;
 
-  fetch("https://cad1-2a01-cb0d-294-e200-9eb-d022-9b6d-e6aa.ngrok-free.app/save-config", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(config)
-  })
-  .then(res => res.json())
-  .then(() => {
-    alert("Paramètres sauvegardés globalement ✅");
-  })
-  .catch(err => console.error(err));
+  localStorage.setItem("shopConfig", JSON.stringify(config));
+  alert("Paramètres sauvegardés localement ✅\n⚠️ Pour appliquer globalement, il faut mettre à jour la feuille Google Sheets manuellement.");
 }
