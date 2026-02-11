@@ -42,15 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
         titleEl.innerText = config.title;
       }
 
-      // Logo
-      if (config.logo) {
-        const logo = document.getElementById("shop-logo");
-        if (logo) {
-          logo.src = config.logo;
-          logo.classList.remove("hidden");
-        }
-      }
-
       applyTheme(config);
     })
     .catch(err => console.error("Erreur config :", err));
