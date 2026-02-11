@@ -29,7 +29,10 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log("Avant fetch");
 
   fetch("https://cad1-2a01-cb0d-294-e200-9eb-d022-9b6d-e6aa.ngrok-free.app/get-config")
-    .then(res => res.json())
+    .then(res => {
+      console.log("STATUS:", res.status);
+      return res.json();
+    })
     .then(config => {
       console.log("Config serveur :", config);
 
