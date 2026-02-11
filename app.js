@@ -1,17 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
   console.log("app.js chargé ✅");
 
-  // ====== FONCTION THÈME ======
   function applyTheme(config) {
     console.log("🎨 Application du thème", config);
 
-    // Fond
     if (config.bgColor) {
       document.documentElement.style.setProperty("--bg-color", config.bgColor);
-      document.body.style.backgroundColor = config.bgColor; // fallback
+      document.body.style.backgroundColor = config.bgColor;
     }
 
-    // Boutons
     if (config.buttonColor) {
       document.documentElement.style.setProperty("--button-color", config.buttonColor);
       document.querySelectorAll("button").forEach(btn => {
@@ -21,20 +18,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ====== CHARGEMENT CONFIG DEPUIS SERVEUR ======
-  // ====== CHARGEMENT CONFIG DEPUIS SERVEUR ======
+  let tg = null;
+  if (window.Telegram && window.Telegram.WebApp) {
+    tg = Telegram.WebApp;
+    tg.ready();
+  }
+
+  // 🔥 CHARGEMENT CONFIG SERVEUR
   fetch("https://3634-2a01-cb0d-294-e200-9eb-d022-9b6d-e6aa.ngrok-free.app/get-config")
     .then(res => res.json())
     .then(config => {
-  
       console.log("Config serveur :", config);
-  
+
       // Titre
       const titleEl = document.getElementById("shop-title");
       if (titleEl && config.title) {
         titleEl.innerText = config.title;
       }
-  
+
       // Logo
       if (config.logo) {
         const logo = document.getElementById("shop-logo");
@@ -43,12 +44,11 @@ document.addEventListener("DOMContentLoaded", () => {
           logo.classList.remove("hidden");
         }
       }
-  
-      // Appliquer thème
+
       applyTheme(config);
-  
     })
     .catch(err => console.error("Erreur config :", err));
+
   
 
   // ====== PRODUITS ======
