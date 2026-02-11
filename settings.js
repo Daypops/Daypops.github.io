@@ -1,7 +1,7 @@
 let config = {};
 
 // Charger config existante
-fetch("https://85dc-2a01-cb0d-294-e200-9eb-d022-9b6d-e6aa.ngrok-free.app/get-config")
+fetch("https://cad1-2a01-cb0d-294-e200-9eb-d022-9b6d-e6aa.ngrok-free.app/get-config")
   .then(res => res.json())
   .then(data => {
     config = data;
@@ -24,7 +24,7 @@ function save() {
   config.bgColor = document.getElementById("bgColor").value;
   config.buttonColor = document.getElementById("buttonColor").value;
 
-  fetch("https://85dc-2a01-cb0d-294-e200-9eb-d022-9b6d-e6aa.ngrok-free.app/save-config", {
+  fetch("https://cad1-2a01-cb0d-294-e200-9eb-d022-9b6d-e6aa.ngrok-free.app/save-config", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
