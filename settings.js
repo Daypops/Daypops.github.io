@@ -1,18 +1,13 @@
 let config = {};
 
-// URL de ta feuille Google Sheets publiée en CSV
-const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRVsxi4Wz_wnVaqEeliFCdkVwARAp2EwYHht9-VUmf7mcx_Eo3EqaUAgS2kBkXhOmJ0zSp9wZWEZkWx/pub?output=csv";
+// URL de ton Apps Script déployé en tant qu'API Web
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyH_LDM0tz5y0FDOUnc-R6DRU8t7bnzOxdu1VWEDdHifwK9qmIVvkwucgAATKSyAdIXCA/exec"; // <-- remplace par l'URL de ton Apps Script
 
-// Charger la config depuis Google Sheets
-fetch(csvUrl)
-  .then(res => res.text())
-  .then(text => {
-    // Transformer le CSV en JSON simple
-    const lines = text.trim().split("\n");
-    lines.forEach(line => {
-      const [key, value] = line.split(",");
-      config[key.trim()] = value.trim();
-    });
+// Charger la config depuis la Google Sheet via Apps Script
+fetch(SCRIPT_URL)
+  .then(res => res.json())
+  .then(data => {
+    config = data;
 
     // Initialiser les champs du formulaire
     document.getElementById("title").value = config.title || "";
@@ -21,14 +16,30 @@ fetch(csvUrl)
   })
   .catch(err => console.error("Erreur chargement config :", err));
 
-// Fonction pour "sauvegarder"
-// ⚠️ Google Sheets publié en lecture seule, donc on ne peut pas l’écrire directement
-// Ici, on sauvegarde uniquement dans localStorage pour l’instant
+// ⚠️ On oublie le logo pour l'instant
+
+// Fonction pour sauvegarder les modifications
 function save() {
+  // Récupérer les valeurs du formulaire
   config.title = document.getElementById("title").value;
   config.bgColor = document.getElementById("bgColor").value;
   config.buttonColor = document.getElementById("buttonColor").value;
 
-  localStorage.setItem("shopConfig", JSON.stringify(config));
-  alert("Paramètres sauvegardés localement ✅\n⚠️ Pour appliquer globalement, il faut mettre à jour la feuille Google Sheets manuellement.");
+  // Envoyer la config au Apps Script pour mise à jour globale
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    body: JSON.stringify(config),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+    .then(res => res.json())
+    .then(() => {
+      alert("Paramètres sauvegardés globalement ✅");
+    })
+    .catch(err => {
+      console.error("Erreur sauvegarde config :", err);
+      alert("Erreur lors de la sauvegarde globale. Les paramètres sont sauvegardés localement.");
+      localStorage.setItem("shopConfig", JSON.stringify(config));
+    });
 }
