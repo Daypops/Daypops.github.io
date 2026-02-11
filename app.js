@@ -44,15 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const titleEl = document.getElementById("shop-title");
       if (titleEl && config.title) titleEl.innerText = config.title;
 
-      // Logo
-      if (config.logo) {
-        const logo = document.getElementById("shop-logo");
-        if (logo) {
-          logo.src = config.logo;
-          logo.classList.remove("hidden");
-        }
-      }
-
       // Thème
       applyTheme(config);
 
