@@ -1,73 +1,44 @@
 document.addEventListener("DOMContentLoaded", () => {
   console.log("app.js chargé ✅");
 
-  // ====== FONCTION THÈME ======
-  function applyTheme(config) {
-    if (config.bgColor) {
-      document.documentElement.style.setProperty("--bg-color", config.bgColor);
-      document.body.style.backgroundColor = config.bgColor;
-    }
-    if (config.buttonColor) {
-      document.documentElement.style.setProperty("--button-color", config.buttonColor);
-      document.querySelectorAll("button").forEach(btn => {
-        btn.style.backgroundColor = config.buttonColor;
-        btn.style.color = "#fff";
-      });
-    }
-  }
+  const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRVsxi4Wz_wnVaqEeliFCdkVwARAp2EwYHht9-VUmf7mcx_Eo3EqaUAgS2kBkXhOmJ0zSp9wZWEZkWx/pub?output=csv";
 
-  // ====== TELEGRAM WEBAPP ======
-  let tg = null;
-  if (window.Telegram && window.Telegram.WebApp) {
-    tg = Telegram.WebApp;
-    tg.ready();
-  }
-
-  // ====== CONFIG DEPUIS GOOGLE SHEETS ======
-  const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRVsxi4Wz_wnVaqEeliFCdkVwARAp2EwYHht9-VUmf7mcx_Eo3EqaUAgS2kBkXhOmJ0zSp9wZWEZkWx/pub?output=csv";
-
-  fetch(csvUrl)
+  fetch(sheetUrl)
     .then(res => res.text())
     .then(text => {
-      // Transformer le CSV en JSON
       const lines = text.trim().split("\n");
+
+      // Découper les en-têtes
+      const headers = lines[0].split("\t"); // TAB car ton export semble tabulé
+
+      // Prendre la dernière ligne (la plus récente)
+      const lastLine = lines[lines.length - 1].split("\t");
+
       const config = {};
-      lines.forEach(line => {
-        const [key, value] = line.split(",");
-        if (key && value) config[key.trim()] = value.trim();
-      });
+      headers.forEach((h, i) => config[h.trim()] = lastLine[i].trim());
 
       console.log("Config depuis Google Sheets :", config);
 
-      // ====== APPLIQUER CONFIG ======
-      // Titre
+      // Appliquer titre
       const titleEl = document.getElementById("shop-title");
-      if (titleEl && config.title) titleEl.innerText = config.title;
+      if (titleEl && config["Titre de la Boutique"]) titleEl.innerText = config["Titre de la Boutique"];
 
-      // Thème
-      applyTheme(config);
+      // Appliquer thème
+      if (config["Couleur du fond"]) {
+        document.body.style.backgroundColor = config["Couleur du fond"];
+      }
 
-      // ====== PRODUITS ======
-      const products = [
-        { id: 1, name: "Produit A", video: "videos/video1.MP4" },
-        { id: 2, name: "Produit B", video: "videos/video2.MP4" }
-      ];
+      if (config["Couleur des boutons"]) {
+        document.querySelectorAll("button").forEach(btn => {
+          btn.style.backgroundColor = config["Couleur des boutons"];
+          btn.style.color = "#fff";
+        });
+      }
+    })
+    .catch(err => console.error("Erreur fetch config Google Sheets :", err));
+});
 
-      const container = document.getElementById("products");
-      let cart = [];
-      let currentProduct = null;
-      let quantity = 1;
 
-      products.forEach(p => {
-        const div = document.createElement("div");
-        div.className = "product";
-        div.innerHTML = `
-          <video src="${p.video}" muted autoplay loop playsinline></video>
-          <p>${p.name}</p>
-        `;
-        div.addEventListener("click", () => openModal(p));
-        container.appendChild(div);
-      });
 
       // ====== FONCTIONS GLOBALES ======
       window.openModal = function(product) {
