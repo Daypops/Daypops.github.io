@@ -1,8 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   console.log("app.js chargé ✅");
 
-  // ====== CONFIG VIA GOOGLE SHEETS ======
-  const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRVsxi4Wz_wnVaqEeliFCdkVwARAp2EwYHht9-VUmf7mcx_Eo3EqaUAgS2kBkXhOmJ0zSp9wZWEZkWx/pub?output=csv";
+  const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRVsxi4Wz_wnVaqEeliFCdkVwARAp2EwYHht9-VUmf7mcx_Eo3EqaUAgS2kBkXhOmJ0zSp9wZWEZkWx/pub?output=tsv";
 
   fetch(sheetUrl)
     .then(res => res.text())
@@ -10,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const lines = text.trim().split("\n");
 
       // Découper les en-têtes
-      const headers = lines[0].split("\t"); // TAB car ton export est tabulé
+      const headers = lines[0].split("\t"); // TSV = tabulations
 
       // Prendre la dernière ligne (la plus récente)
       const lastLine = lines[lines.length - 1].split("\t");
@@ -22,7 +21,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Appliquer titre
       const titleEl = document.getElementById("shop-title");
-      if (titleEl && config["Titre de la Boutique"]) titleEl.innerText = config["Titre de la Boutique"];
+      if (titleEl && config["Titre de la Boutique"]) {
+        titleEl.innerText = config["Titre de la Boutique"];
+      }
 
       // Appliquer thème
       if (config["Couleur du fond"]) {
@@ -48,6 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let cart = [];
   let currentProduct = null;
   let quantity = 1;
+  let tg = window.Telegram && window.Telegram.WebApp ? Telegram.WebApp : null;
 
   products.forEach(p => {
     const div = document.createElement("div");
@@ -101,8 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    if (window.Telegram && window.Telegram.WebApp) {
-      const tg = Telegram.WebApp;
+    if (tg) {
       tg.sendData(JSON.stringify({ cart }));
       tg.close();
     } else {
