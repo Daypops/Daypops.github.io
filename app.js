@@ -2,13 +2,10 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log("app.js chargé ✅");
 
   function applyTheme(config) {
-    console.log("🎨 Application du thème", config);
-
     if (config.bgColor) {
       document.documentElement.style.setProperty("--bg-color", config.bgColor);
       document.body.style.backgroundColor = config.bgColor;
     }
-
     if (config.buttonColor) {
       document.documentElement.style.setProperty("--button-color", config.buttonColor);
       document.querySelectorAll("button").forEach(btn => {
@@ -18,36 +15,39 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  let tg = null;
-  if (window.Telegram && window.Telegram.WebApp) {
-    tg = Telegram.WebApp;
-    tg.ready();
-  }
+  const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRVsxi4Wz_wnVaqEeliFCdkVwARAp2EwYHht9-VUmf7mcx_Eo3EqaUAgS2kBkXhOmJ0zSp9wZWEZkWx/pub?output=csv";
 
-  // 🔥 CHARGEMENT CONFIG SERVEUR
-  console.log("Avant fetch");
+  fetch(csvUrl)
+    .then(res => res.text())
+    .then(text => {
+      // Transformer le CSV en JSON
+      const lines = text.trim().split("\n");
+      const result = {};
+      lines.forEach(line => {
+        const [key, value] = line.split(","); // clé,valeur
+        result[key.trim()] = value.trim();
+      });
 
-  fetch("https://cad1-2a01-cb0d-294-e200-9eb-d022-9b6d-e6aa.ngrok-free.app/get-config")
-    .then(res => {
-      console.log("STATUS:", res.status);
-      return res.json();
-    })
-    .then(config => {
-      console.log("Config serveur :", config);
+      console.log("Config depuis Google Sheets :", result);
 
-      // Titre
+      // Appliquer titre et thème
       const titleEl = document.getElementById("shop-title");
-      if (titleEl && config.title) {
-        titleEl.innerText = config.title;
+      if (titleEl && result.title) titleEl.innerText = result.title;
+
+      applyTheme(result);
+
+      // Logo si présent
+      if (result.logo) {
+        const logo = document.getElementById("shop-logo");
+        if (logo) {
+          logo.src = result.logo;
+          logo.classList.remove("hidden");
+        }
       }
-
-      applyTheme(config);
     })
-    .catch(err => console.error("Erreur config :", err));
-
-
+    .catch(err => console.error("Erreur fetch CSV :", err));
+});
   
-
   // ====== PRODUITS ======
   const products = [
     { id: 1, name: "Produit A", video: "videos/video1.MP4" },
