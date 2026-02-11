@@ -1,7 +1,7 @@
 let config = {};
 
 // URL de ton Apps Script déployé en tant qu'API Web
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyH_LDM0tz5y0FDOUnc-R6DRU8t7bnzOxdu1VWEDdHifwK9qmIVvkwucgAATKSyAdIXCA/exec"; // <-- remplace par l'URL de ton Apps Script
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx6dDwWRg1Ai0QdgE5GGvYdL8vPYypCG_dVn9SMICA0YRMYc-a0rxIHzTxoaNf60o55qQ/exec"; // <-- remplace par l'URL de ton Apps Script
 
 // Charger la config depuis la Google Sheet via Apps Script
 fetch(SCRIPT_URL)
