@@ -22,7 +22,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ====== CHARGEMENT CONFIG DEPUIS SERVEUR ======
-  fetch("https://3634-2a01-cb0d-294-e200-9eb-d022-9b6d-e6aa.ngrok-free.app:5000/get-config")
+  // ====== CHARGEMENT CONFIG DEPUIS SERVEUR ======
+  fetch("https://3634-2a01-cb0d-294-e200-9eb-d022-9b6d-e6aa.ngrok-free.app/get-config")
     .then(res => res.json())
     .then(config => {
   
@@ -43,28 +44,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
   
-      // Appliquer thème après Telegram
-      if (window.Telegram && window.Telegram.WebApp) {
-        Telegram.WebApp.ready();
-        setTimeout(() => applyTheme(config), 50);
-      } else {
-        applyTheme(config);
-      }
+      // Appliquer thème
+      applyTheme(config);
   
     })
     .catch(err => console.error("Erreur config :", err));
   
-  
-    // Sécurité : Telegram seulement si dispo
-    let tg = null;
-    if (window.Telegram && window.Telegram.WebApp) {
-      tg = Telegram.WebApp;
-      tg.ready();
-      // Appliquer le thème après que Telegram a forcé son style
-      setTimeout(() => applyTheme(config), 50);
-    } else {
-      applyTheme(config);
-    }
 
   // ====== PRODUITS ======
   const products = [
