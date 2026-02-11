@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // 🔥 CHARGEMENT CONFIG SERVEUR
-  fetch("https://85dc-2a01-cb0d-294-e200-9eb-d022-9b6d-e6aa.ngrok-free.app/get-config")
+  fetch("https://3634-2a01-cb0d-294-e200-9eb-d022-9b6d-e6aa.ngrok-free.app/get-config")
     .then(res => res.json())
     .then(config => {
       console.log("Config serveur :", config);
