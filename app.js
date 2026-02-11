@@ -4,40 +4,44 @@ document.addEventListener("DOMContentLoaded", () => {
   const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRVsxi4Wz_wnVaqEeliFCdkVwARAp2EwYHht9-VUmf7mcx_Eo3EqaUAgS2kBkXhOmJ0zSp9wZWEZkWx/pub?output=tsv";
 
   fetch(sheetUrl)
-    .then(res => res.text())
-    .then(text => {
-      const lines = text.trim().split("\n");
+  .then(res => res.text())
+  .then(text => {
+    const lines = text.trim().split("\n");
+    const headers = lines[0].split("\t");
+    
+    let latestLine = null;
+    let latestDate = 0;
 
-      // Découper les en-têtes
-      const headers = lines[0].split("\t"); // TSV = tabulations
-
-      // Prendre la dernière ligne (la plus récente)
-      const lastLine = lines[lines.length - 1].split("\t");
-
-      const config = {};
-      headers.forEach((h, i) => config[h.trim()] = lastLine[i].trim());
-
-      console.log("Config depuis Google Sheets :", config);
-
-      // Appliquer titre
-      const titleEl = document.getElementById("shop-title");
-      if (titleEl && config["Titre de la Boutique"]) {
-        titleEl.innerText = config["Titre de la Boutique"];
+    for (let i = 1; i < lines.length; i++) {
+      const cells = lines[i].split("\t");
+      const row = {};
+      headers.forEach((h, j) => row[h.trim()] = cells[j].trim());
+      
+      const date = new Date(row["Horodateur"]).getTime();
+      if (date > latestDate) {
+        latestDate = date;
+        latestLine = row;
       }
+    }
 
-      // Appliquer thème
-      if (config["Couleur du fond"]) {
-        document.body.style.backgroundColor = config["Couleur du fond"];
-      }
+    console.log("Dernière config :", latestLine);
 
-      if (config["Couleur des boutons"]) {
-        document.querySelectorAll("button").forEach(btn => {
-          btn.style.backgroundColor = config["Couleur des boutons"];
-          btn.style.color = "#fff";
-        });
-      }
-    })
-    .catch(err => console.error("Erreur fetch config Google Sheets :", err));
+    // Appliquer titre et thème
+    if (latestLine["Titre de la Boutique"]) {
+      document.getElementById("shop-title").innerText = latestLine["Titre de la Boutique"];
+    }
+    if (latestLine["Couleur du fond"]) {
+      document.body.style.backgroundColor = latestLine["Couleur du fond"];
+    }
+    if (latestLine["Couleur des boutons"]) {
+      document.querySelectorAll("button").forEach(btn => {
+        btn.style.backgroundColor = latestLine["Couleur des boutons"];
+        btn.style.color = "#fff";
+      });
+    }
+  })
+  .catch(err => console.error("Erreur fetch config Google Sheets :", err));
+
 
   // ====== PRODUITS ======
   const products = [
