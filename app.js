@@ -22,38 +22,50 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ====== CHARGEMENT CONFIG BOUTIQUE ======
-  const config = JSON.parse(localStorage.getItem("shopConfig")) || {
-    title: "Ma boutique",
-    bgColor: "#f5f5f5",
-    buttonColor: "#0078ff"
-  };
-  console.log("Config chargée :", config);
-
-  // Titre
-  const titleEl = document.getElementById("shop-title");
-  if (titleEl && config.title) {
-    titleEl.innerText = config.title;
-  }
-
-  // Logo
-  if (config.logo) {
-    const logo = document.getElementById("shop-logo");
-    if (logo) {
-      logo.src = config.logo;
-      logo.classList.remove("hidden");
+  // ====== CHARGEMENT CONFIG DEPUIS SERVEUR ======
+  fetch("http://LOCAL_IP:5000/get-config")
+    .then(res => res.json())
+    .then(config => {
+  
+      console.log("Config serveur :", config);
+  
+      // Titre
+      const titleEl = document.getElementById("shop-title");
+      if (titleEl && config.title) {
+        titleEl.innerText = config.title;
+      }
+  
+      // Logo
+      if (config.logo) {
+        const logo = document.getElementById("shop-logo");
+        if (logo) {
+          logo.src = config.logo;
+          logo.classList.remove("hidden");
+        }
+      }
+  
+      // Appliquer thème après Telegram
+      if (window.Telegram && window.Telegram.WebApp) {
+        Telegram.WebApp.ready();
+        setTimeout(() => applyTheme(config), 50);
+      } else {
+        applyTheme(config);
+      }
+  
+    })
+    .catch(err => console.error("Erreur config :", err));
+  
+  
+    // Sécurité : Telegram seulement si dispo
+    let tg = null;
+    if (window.Telegram && window.Telegram.WebApp) {
+      tg = Telegram.WebApp;
+      tg.ready();
+      // Appliquer le thème après que Telegram a forcé son style
+      setTimeout(() => applyTheme(config), 50);
+    } else {
+      applyTheme(config);
     }
-  }
-
-  // Sécurité : Telegram seulement si dispo
-  let tg = null;
-  if (window.Telegram && window.Telegram.WebApp) {
-    tg = Telegram.WebApp;
-    tg.ready();
-    // Appliquer le thème après que Telegram a forcé son style
-    setTimeout(() => applyTheme(config), 50);
-  } else {
-    applyTheme(config);
-  }
 
   // ====== PRODUITS ======
   const products = [
