@@ -1,4 +1,3 @@
-document.getElementById("shop-title").innerText = "TEST DIRECT";
 document.addEventListener("DOMContentLoaded", () => {
   console.log("app.js chargé ✅");
 
